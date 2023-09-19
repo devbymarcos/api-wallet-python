@@ -40,26 +40,29 @@ def find_users():
     return jsonify(user_list)
 
 
-def set_user(email, password):
+def set_user(data):
 
-    user = Users.query.filter_by(email=email).first()
+    user = Users.query.filter_by(email=data['email']).first()
 
     if user:
         return Response(json.dumps({"message": "Este usuário ja existe"}))
+
     else:
 
         salt = bcrypt.gensalt()
-        hash_passwd = bcrypt.hashpw(password.encode('utf-8'), salt)
+        hash_passwd = bcrypt.hashpw(data['password'].encode('utf-8'), salt)
+        try:
+            user_add = Users(
+                first_name="lopes",
+                last_name="juvencio",
+                email=data['email'],
+                password=hash_passwd,
+                photo="default"
+            )
 
-        user_add = Users(
-            first_name="lopes",
-            last_name="juvencio",
-            email=email,
-            password=hash_passwd,
-            photo="default"
-        )
+            db.session.add(user_add)
+            db.session.commit()
 
-        db.session.add(user_add)
-        db.session.commit()
-
-    return Response(json.dumps({"email": email, "senha": "feito"}), status=200, mimetype='application/json')
+            return Response(json.dumps({"messagem": "Usuário criado"}), status=200, mimetype='application/json')
+        except Exception:
+            print(Exception)
