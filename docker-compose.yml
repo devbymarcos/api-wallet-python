@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+  mysql:
+    image: mysql:8.0
+    env_file:
+      - .env
