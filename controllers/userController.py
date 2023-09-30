@@ -1,12 +1,13 @@
 
 from flask import Blueprint, jsonify, Response
-from models.users import Users, db
+from models.users import Users
+from database import db
 import json
 import bcrypt
 
 
 def find_user(id):
-    user = Users.query.get(id)
+    user = db.session.query(Users).get(id)
 
     if user:
         user_data = {
@@ -26,7 +27,7 @@ def find_user(id):
 
 
 def find_users():
-    users = Users.query.all()
+    users = db.session.query(Users).all()
     user_list = []
     for user in users:
         user_data = {
@@ -34,7 +35,8 @@ def find_users():
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
-            "photo": user.photo
+            "photo": user.photo,
+            "created_at": user.created_at
         }
         user_list.append(user_data)
     return jsonify(user_list)
@@ -42,7 +44,7 @@ def find_users():
 
 def set_user(data):
 
-    user = Users.query.filter_by(email=data['email']).first()
+    user = db.session.query(Users).filter_by(email=data['email']).first()
 
     if user:
         return Response(json.dumps({"message": "Este usuário ja existe"}))
@@ -53,8 +55,8 @@ def set_user(data):
         hash_passwd = bcrypt.hashpw(data['password'].encode('utf-8'), salt)
         try:
             user_add = Users(
-                first_name="lopes",
-                last_name="juvencio",
+                first_name=data["first_name"],
+                last_name=data["last_name"],
                 email=data['email'],
                 password=hash_passwd,
                 photo="default"
