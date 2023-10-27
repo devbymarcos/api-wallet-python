@@ -1,6 +1,6 @@
 from flask import Flask
-from ext import configuration
-from ext import database
+from wallet.ext import configuration
+from wallet.ext import database
 
 
 app = Flask(__name__)
