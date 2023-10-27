@@ -1,0 +1,8 @@
+[default]
+DATABASE_URL = "mysql+mysqlconnector://marcos:1234@localhost/wallet"
+
+
+[development]
+
+
+[production]
