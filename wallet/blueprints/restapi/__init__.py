@@ -1,12 +1,14 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from .resources import UserResource\
+from .resources import LoginResource, UserResource, WalletResource
 
 bp = Blueprint("restapi", __name__, url_prefix="/api/v1")
 api = Api(bp)
 
 
 def init_app(app):
+    api.add_resource(LoginResource, "/Login/")
     api.add_resource(UserResource, "/user/")
+    api.add_resource(WalletResource, "/wallet/")
     app.register_blueprint(bp)
