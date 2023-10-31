@@ -20,6 +20,10 @@ class UserResource(Resource):
     def post(self):
         data = request.get_json()
         user = User()
+        user_exist = user.has_user_email(data["email"])
+        if user_exist:
+            return jsonify({"message": "Este email de user ja exite"})
+
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
         user.email = data["email"]

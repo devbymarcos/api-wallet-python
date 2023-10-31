@@ -31,3 +31,11 @@ class User(Base):
             db.session.commit()
         except Exception as e:
             print(e)
+
+    def has_user_email(self, email):
+        user = db.session.execute(
+            db.select(User).filter_by(email=email)).scalar_one()
+        if user is not None:
+            return True
+        else:
+            return False
