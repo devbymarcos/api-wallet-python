@@ -40,12 +40,3 @@ class UserResource(Resource):
 
         }
         return jsonify(user_data)
-
-
-class WalletResource(Resource):
-    def get(self):
-        return jsonify({"message": "carteira aqui "})
-
-
-class LoginResource(Resource):
-    pass
