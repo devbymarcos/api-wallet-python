@@ -7,6 +7,14 @@ import json
 
 class WalletResource(Resource):
     def get(self):
+        wallet = Wallet()
+        wallet_result = wallet.find_by_id(2)
+        if wallet_result is not None:
+            return jsonify({
+                'name': wallet_result.name,
+                'description': wallet_result.description
+            })
+
         return jsonify({"message": "carteira aqui "})
 
 

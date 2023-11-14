@@ -35,3 +35,9 @@ class Wallet(Base):
         ]
 
         return data_result
+
+    def find_by_id(self, id):
+        wallet = db.session.execute(
+            db.select(Wallet).filter_by(id=id)).scalar_one()
+
+        return wallet
