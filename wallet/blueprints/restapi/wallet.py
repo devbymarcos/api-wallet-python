@@ -1,7 +1,8 @@
 from flask import abort, jsonify, request
 from flask_restful import Resource
-from wallet.models.User import User
+from wallet.models.Wallet import Wallet
 from wallet.ext.database import db
+import json
 
 
 class WalletResource(Resource):
@@ -11,4 +12,6 @@ class WalletResource(Resource):
 
 class WalletsResource(Resource):
     def get(self):
-        return jsonify({"message": "todas as carteiras"})
+        wallets = Wallet()
+        wallet_list = wallets.find_all_reduce(1)
+        return jsonify(wallet_list)

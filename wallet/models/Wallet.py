@@ -15,3 +15,23 @@ class Wallet(Base):
     created_at = Column(DateTime, default=func.current_timestamp())
     updated_at = Column(DateTime, default=func.current_timestamp(),
                         onupdate=func.current_timestamp())
+
+    def find_all(self, user_id):
+        wallet = db.session.execute(
+            db.select(Wallet).filter_by(user_id=user_id)).all()
+
+        if wallet is not None:
+            return wallet
+        else:
+            return None
+
+    def find_all_reduce(self, user_id):
+        result = self.find_all(user_id=user_id)
+        if (result == None):
+            return result
+
+        data_result = [
+            {'name': wallet[0].name, 'description': wallet[0].description} for wallet in result
+        ]
+
+        return data_result
