@@ -5,9 +5,9 @@ from wallet.ext.database import db
 
 
 class UserResource(Resource):
-    def get(self):
+    def get(self,user_id):
         user = User()
-        user_list = user.get_user_id(1)
+        user_list = user.get_user_id(user_id)
 
         if user_list is not None:
             return jsonify({

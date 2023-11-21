@@ -1,6 +1,5 @@
 from wallet.ext.database import Base
 from sqlalchemy import Column, Integer, String, DateTime, Float, Date, func, ForeignKey
-
 from wallet.ext.database import db
 
 
