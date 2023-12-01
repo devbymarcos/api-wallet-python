@@ -12,9 +12,9 @@ api = Api(bp)
 
 def init_app(app):
     api.add_resource(LoginResource, "/Login/")
-    api.add_resource(UserResource, "/user/<int:user_id>")
-    api.add_resource(WalletResource, "/wallet/<int:id>")
+    api.add_resource(UserResource, "/user")
     api.add_resource(WalletsResource, "/wallets/")
+    api.add_resource(WalletResource, "/wallet/<int:id>")
     api.add_resource(InvoiceResource, "/invoice/")
     api.add_resource(InvoicesResource, "/invoices/")
     api.add_resource(CategoryResource, "/category/")

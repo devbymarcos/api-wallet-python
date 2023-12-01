@@ -16,7 +16,7 @@ class User(Base):
     updated_at = Column(DateTime, default=func.current_timestamp(),
                         onupdate=func.current_timestamp())
 
-    def get_user_id(self, id):
+    def findy_by_Id(self, id):
         user = db.session.execute(
             db.select(User).filter_by(id=id)).scalar_one()
         if user is not None:

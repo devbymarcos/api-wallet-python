@@ -25,19 +25,28 @@ class Wallet(Base):
         else:
             return None
 
-    def find_all_reduce(self, user_id):
-        result = self.find_all(user_id=user_id)
-        if (result == None):
-            return result
-
-        data_result = [
-            {'name': wallet[0].name, 'description': wallet[0].description} for wallet in result
-        ]
-
-        return data_result
-
-    def find_by_id(self, id):
-        wallet = db.session.execute(
-            db.select(Wallet).filter_by(id=id)).scalar_one()
+    @classmethod
+    def find_by_id(cls, id):
+        try:
+            wallet = db.session.execute(
+                db.select(Wallet).filter_by(id=id)).scalar_one()
+        except Exception as e:
+            print(e)
+            return None
 
         return wallet
+
+    @classmethod
+    def remove(cls, id):
+        drop_instance = cls.find_by_id(id)
+        if drop_instance:
+            try:
+                db.session.delete(drop_instance)
+                db.session.commit()
+                return True
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+                return False
+        else:
+            return False

@@ -7,10 +7,7 @@ import json
 
 class WalletResource(Resource):
     def get(self, id):
-
-        wallet = Wallet()
-
-        wallet_result = wallet.find_by_id(id)
+        wallet_result = Wallet.find_by_id(id)
         if wallet_result is not None:
             return jsonify({
                 'name': wallet_result.name,
@@ -19,9 +16,21 @@ class WalletResource(Resource):
 
         return jsonify({"message": "carteira aqui ", "id": id})
 
+    def delete(self, id):
+        wallet_result = Wallet.remove(id)
+        if not wallet_result:
+            return jsonify({"messagem": "Não foi possivel fazer exclusão", "execute": False})
+        return jsonify({"message": "exclusao realizda", "execute": True})
+
 
 class WalletsResource(Resource):
     def get(self):
         wallets = Wallet()
-        wallet_list = wallets.find_all_reduce(1)
-        return jsonify(wallet_list)
+        result = wallets.find_all(user_id=1)
+        if (result == None):
+            return result
+
+        data_result = [
+            {'name': wallet[0].name, 'description': wallet[0].description} for wallet in result
+        ]
+        return jsonify(data_result)
