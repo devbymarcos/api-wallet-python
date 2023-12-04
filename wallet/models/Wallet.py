@@ -16,9 +16,10 @@ class Wallet(Base):
     updated_at = Column(DateTime, default=func.current_timestamp(),
                         onupdate=func.current_timestamp())
 
-    def find_all(self, user_id):
+    @classmethod
+    def find_all(cls, user_id):
         wallet = db.session.execute(
-            db.select(Wallet).filter_by(user_id=user_id)).all()
+            db.select(cls).filter_by(user_id=user_id)).all()
 
         if wallet is not None:
             return wallet
@@ -29,7 +30,7 @@ class Wallet(Base):
     def find_by_id(cls, id):
         try:
             wallet = db.session.execute(
-                db.select(Wallet).filter_by(id=id)).scalar_one()
+                db.select(cls).filter_by(id=id)).scalar_one()
         except Exception as e:
             print(e)
             return None
@@ -49,4 +50,20 @@ class Wallet(Base):
                 print(e)
                 return False
         else:
+            return False
+
+    @classmethod
+    def save(cls, user_id, name, description, option_wallet,):
+        wallet_create = cls(
+            user_id=user_id,
+            name=name,
+            description=description,
+            option_wallet=option_wallet
+        )
+        try:
+            db.session.add(wallet_create)
+            db.session.commit()
+            return wallet_create
+        except Exception as e:
+            print(e)
             return False
