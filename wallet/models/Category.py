@@ -49,16 +49,16 @@ class Category(Base):
         except Exception as e:
             print(e)
             return False
-    
+
     @classmethod
-    def update(cls,id,name, description, type):
+    def update(cls, id, name, description, type):
         category_update = cls.find_by_id(id)
         if category_update:
             try:
                 category_update.name = name
                 category_update.description = description
                 category_update.type = type
-                
+
                 db.session.commit()
                 return True
             except Exception as e:
@@ -66,4 +66,15 @@ class Category(Base):
                 print(e)
                 return False
         else:
+            return False
+
+    @classmethod
+    def remove(cls, id):
+        category_remove = cls.find_by_id(id)
+        try:
+            db.session.delete(category_remove)
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(e)
             return False
