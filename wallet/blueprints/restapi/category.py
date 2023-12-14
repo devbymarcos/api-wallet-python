@@ -25,9 +25,17 @@ class CategoryResource(Resource):
             return jsonify({"message": "Algo ddeu errado não foi possível remover os dados", "execute": False})
 
     def put(self, id):
-        pass
-
-
+        category = request.get_json()
+        print(category["id"])
+        update = Category.update(category['id'],
+                                 category['name'],
+                                 category['description'],
+                                 category['type']
+                                 )
+        if category:
+            return jsonify({'message':'category updated','execute':True})
+        else:
+            return jsonify({'message':'Unable to update, contact admin'})
 class CategoriesResource(Resource):
     def get(self):
         result = Category.find_all(user_id=1)
