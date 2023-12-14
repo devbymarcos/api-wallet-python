@@ -1,15 +1,16 @@
 from flask import abort, jsonify, request
 from flask_restful import Resource, reqparse
 from wallet.models.Wallet import Wallet
-from wallet.ext.database import db
-import json
+from wallet.blueprints.restapi.verify_auth import auth
 
 
 class WalletResource(Resource):
+
     def get(self, id):
         wallet_result = Wallet.find_by_id(id)
         if wallet_result is not None:
             data_result = {
+                'id': wallet_result.id,
                 'name': wallet_result.name,
                 'description': wallet_result.description,
                 'option_wallet': wallet_result.option_wallet
@@ -36,7 +37,7 @@ class WalletPostResource(Resource):
                                  option_wallet=data["option_wallet"]
                                  )
 
-            if wallet != False:
+            if wallet:
                 data_result = {
                     "id": wallet.id,
                     'name': wallet.name,
@@ -52,12 +53,14 @@ class WalletPostResource(Resource):
 class WalletsResource(Resource):
     def get(self):
         result = Wallet.find_all(user_id=1)
-        if (result == None):
+        if result is None:
             return result
 
         data_result = [
-            {'name': wallet[0].name,
-             'description': wallet[0].description,
-             'option_wallet': wallet[0].option_wallet} for wallet in result
+            {
+                'id':  wallet[0].id,
+                'name': wallet[0].name,
+                'description': wallet[0].description,
+                'option_wallet': wallet[0].option_wallet} for wallet in result
         ]
         return jsonify({"wallets": data_result})
