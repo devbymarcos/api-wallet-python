@@ -2,42 +2,48 @@ from flask import abort, jsonify, request
 from flask_restful import Resource, reqparse
 from wallet.models.Wallet import Wallet
 from wallet.blueprints.restapi.verify_auth import auth
-
+from wallet.functions.helpers import dic_return_api
 
 class WalletResource(Resource):
 
     def get(self, id):
-        wallet_result = Wallet.find_by_id(id)
-        if wallet_result is not None:
-            data_result = {
-                'id': wallet_result.id,
-                'name': wallet_result.name,
-                'description': wallet_result.description,
-                'option_wallet': wallet_result.option_wallet
-            }
-            return jsonify({"wallet": data_result})
+        print(id)
+        wallet = Wallet(id=id)
+        data = wallet.find_by_id()
 
-        return jsonify({"message": "não encontramos o resgistro ", "data": None})
+        if data is not None:
+            data_result = {
+                'id': data.id,
+                'name': data.name,
+                'description': data.description,
+                'option_wallet': data.option_wallet
+            }
+            return jsonify(dic_return_api(data_result,request="wallet"))
+
+        return jsonify(dic_return_api(None,message="Nào encontramos resultados",request="wallet"))
+
 
     def delete(self, id):
-        wallet_result = Wallet.remove(id)
-        if not wallet_result:
-            return jsonify({"messagem": "Não foi possivel fazer exclusão", "execute": False})
-        return jsonify({"message": "exclusao realizda", "execute": True})
+        wallet = Wallet(id=id)
+        data = wallet.remove()
+        if not data:
+            return jsonify(dic_return_api(False,message="Não foi possivel fazer exclusão",request="wallet"))
+        return jsonify(dic_return_api(True,message="exclusao realizda",request="wallet"))
 
 
 class WalletPostResource(Resource):
     def post(self):
         if request.is_json:
-            data = request.get_json()
+            data_json = request.get_json()
+            wallet = Wallet(
+                user_id=1,
+                name=data_json['name'],
+                description=data_json["description"],
+                option_wallet=data_json["option_wallet"]
+            )
+            data = wallet.save()
 
-            wallet = Wallet.save(user_id=1,
-                                 name=data['name'],
-                                 description=data["description"],
-                                 option_wallet=data["option_wallet"]
-                                 )
-
-            if wallet:
+            if data:
                 data_result = {
                     "id": wallet.id,
                     'name': wallet.name,
@@ -45,22 +51,23 @@ class WalletPostResource(Resource):
                     'option_wallet': wallet.option_wallet
                 }
 
-                return jsonify({"wallet": data_result})
+                return jsonify(dic_return_api(data_result,request="wallet"))
             else:
-                return jsonify({'message': 'Nào foi possível criar a carteira', 'execute': False})
+                return jsonify(dic_return_api(None,message="Algo deu erra contate o admin",request="wallet"))
 
 
 class WalletsResource(Resource):
     def get(self):
-        result = Wallet.find_all(user_id=1)
-        if result is None:
-            return result
+        wallet = Wallet(user_id=1)
+        data = wallet.find_all()
+        if data is None:
+            return data
 
         data_result = [
             {
                 'id':  wallet[0].id,
                 'name': wallet[0].name,
                 'description': wallet[0].description,
-                'option_wallet': wallet[0].option_wallet} for wallet in result
+                'option_wallet': wallet[0].option_wallet} for wallet in data
         ]
-        return jsonify({"wallets": data_result})
+        return jsonify(dic_return_api(data_result,request="wallet"))

@@ -15,31 +15,47 @@ class Wallet(Base):
     created_at = Column(DateTime, default=func.current_timestamp())
     updated_at = Column(DateTime, default=func.current_timestamp(),
                         onupdate=func.current_timestamp())
+    
+    def __init__(
+        self,
+        id=None,
+        user_id=None,
+        name=None,
+        description=None,
+        option_wallet=None):
+        
+        self.id=id
+        self.user_id=user_id
+        self.name = name
+        self.description = description
+        self.option_wallet=option_wallet
 
-    @classmethod
-    def find_all(cls, user_id):
+
+    
+    def find_all(self):
         wallet = db.session.execute(
-            db.select(cls).filter_by(user_id=user_id)).all()
+            db.select(Wallet).filter_by(user_id=self.user_id)).all()
 
         if wallet is not None:
             return wallet
         else:
             return None
 
-    @classmethod
-    def find_by_id(cls, id):
+    
+    def find_by_id(self):
         try:
             wallet = db.session.execute(
-                db.select(cls).filter_by(id=id)).scalar_one()
+                db.select(Wallet).filter_by(id=self.id)).scalar_one()
+            
         except Exception as e:
             print(e)
             return None
 
         return wallet
 
-    @classmethod
-    def remove(cls, id):
-        drop_instance = cls.find_by_id(id)
+   
+    def remove(self):
+        drop_instance = self.find_by_id(self.id)
         if drop_instance:
             try:
                 db.session.delete(drop_instance)
@@ -52,7 +68,7 @@ class Wallet(Base):
         else:
             return False
 
-    @classmethod
+    
     def save(cls, user_id, name, description, option_wallet,):
         wallet_create = cls(
             user_id=user_id,
