@@ -16,51 +16,62 @@ class Category(Base):
     updated_at = Column(DateTime, default=func.current_timestamp(),
                         onupdate=func.current_timestamp())
 
-    @classmethod
-    def find_all(cls, user_id):
-        categories = db.session.execute(
-            db.select(cls).filter_by(user_id=user_id)).all()
-        return categories
+    def __init__(
+            self,
+            id=None, 
+            user_id=None,
+            name=None,
+            description=None,
+            type=None
+            ):
+        self.id = id
+        self.user_id =user_id
+        self.name = name
+        self.description = description
+        self.type = type
 
-    @classmethod
-    def find_by_id(cls, category_id):
+    def find_all(self):
         try:
-            category = db.session.execute(
-                db.select(cls).filter_by(id=category_id)).scalar_one()
-
+            categories = db.session.execute(
+                db.select(Category).filter_by(user_id=self.user_id)).all()
+            return categories
         except Exception as e:
             print(e)
             return None
 
-        return category
+    def find_by_id(self):
+        try:
+            category = db.session.execute(
+                db.select(Category).filter_by(id=self.id)).scalar_one()
+            return category
+        except Exception as e:
+            print(e)
+            return None
 
-    @classmethod
-    def save(cls, user_id, name, description, type,):
-        category_create = cls(
-            user_id=user_id,
-            name=name,
-            description=description,
-            type=type
+    def save(self):
+        category = Category(
+            user_id=self.user_id,
+            name=self.name,
+            description=self.description,
+            type=self.type
         )
         try:
-            db.session.add(category_create)
+            db.session.add(category)
             db.session.commit()
-            return category_create
+            return category
         except Exception as e:
             print(e)
             return False
 
-    @classmethod
-    def update(cls, id, name, description, type):
-        category_update = cls.find_by_id(id)
-        if category_update:
+    def update(self):
+        category = self.find_by_id(self.id)
+        if category:
             try:
-                category_update.name = name
-                category_update.description = description
-                category_update.type = type
-
+                category.name = self.name
+                category.description = self.description
+                category.type = self.type
                 db.session.commit()
-                return True
+                return category
             except Exception as e:
                 db.session.rollback()
                 print(e)
@@ -68,13 +79,13 @@ class Category(Base):
         else:
             return False
 
-    @classmethod
-    def remove(cls, id):
-        category_remove = cls.find_by_id(id)
+    
+    def remove(self):
+        category_remove = self.find_by_id(self.id)
         try:
             db.session.delete(category_remove)
             db.session.commit()
-            return True
+            return category_remove
         except Exception as e:
             print(e)
             return False
