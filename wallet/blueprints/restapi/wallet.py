@@ -29,7 +29,7 @@ class WalletResource(Resource):
         if not data:
             return jsonify(dic_return_api(False,message="Não foi possivel fazer exclusão",request="wallet"))
         return jsonify(dic_return_api(True,message="exclusao realizda",request="wallet"))
-
+    #TODO RESOURCE PARA REALIZAR UPDATE
 
 class WalletPostResource(Resource):
     def post(self):

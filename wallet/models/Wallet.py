@@ -46,12 +46,12 @@ class Wallet(Base):
         try:
             wallet = db.session.execute(
                 db.select(Wallet).filter_by(id=self.id)).scalar_one()
-            
+            return wallet
         except Exception as e:
             print(e)
             return None
 
-        return wallet
+        
 
    
     def remove(self):
@@ -69,17 +69,33 @@ class Wallet(Base):
             return False
 
     
-    def save(cls, user_id, name, description, option_wallet,):
-        wallet_create = cls(
-            user_id=user_id,
-            name=name,
-            description=description,
-            option_wallet=option_wallet
-        )
+    def save(self):
+        wallet = Wallet(
+                user_id=self.user_id,
+                name=self.name,
+                description=self.description,
+                option_wallet=self.option_wallet
+            )
         try:
-            db.session.add(wallet_create)
+            db.session.add(wallet)
             db.session.commit()
-            return wallet_create
+            return wallet
+        except Exception as e:
+            print(e)
+            return False
+        
+
+
+    def update(self):
+        update = self.find_by_id(self.id)
+
+        update.name = self.name
+        update.description = self.description
+        update.option_wallet = self.option_wallet 
+
+        try:
+            db.session.commit()
+            return update
         except Exception as e:
             print(e)
             return False
