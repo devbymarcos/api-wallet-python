@@ -17,7 +17,7 @@ def init_app(app):
     api.add_resource(WalletResource, "/wallet/<int:id>")
     api.add_resource(WalletJsonResource, "/wallet")
     api.add_resource(InvoiceResource, "/invoice/")
-    api.add_resource(InvoicesResource, "/invoices/")
+    api.add_resource(InvoicesResource, "/invoice/<int:id>")
     api.add_resource(CategoryResource, "/category/<int:id>")
     api.add_resource(CategoriesResource, "/categories/")
     api.add_resource(CategoryCreate, "/category")
