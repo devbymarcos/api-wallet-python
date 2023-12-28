@@ -2,7 +2,7 @@ from flask import abort, jsonify, request
 from flask_restful import Resource
 from wallet.ext.database import db
 from wallet.models.Category import Category
-
+from wallet.functions.helpers import dic_return_api
 
 class CategoryResource(Resource):
     def get(self, id):
@@ -38,17 +38,18 @@ class CategoryResource(Resource):
             return jsonify({'message':'Unable to update, contact admin'})
 class CategoriesResource(Resource):
     def get(self):
-        result = Category.find_all(user_id=1)
-        if (result == None):
-            return jsonify({"message": "não encontramos o registro ", "data": None})
+        category = Category(user_id=1)
+        data = category.find_all()
+        if (data == None):
+            return jsonify(dic_return_api(False, message="Não encontramos dados", request="categories"))
 
         data_result = [
             {'id': category[0].id,
              'name': category[0].name,
              'description': category[0].description,
-             'type': category[0].type} for category in result
+             'type': category[0].type} for category in data
         ]
-        return jsonify({"category": data_result})
+        return jsonify(dic_return_api(data_result, message="Não encontramos dados", request="categories"))
 
 
 class CategoryCreate(Resource):
