@@ -39,7 +39,7 @@ class Wallet(Base):
         if wallet is not None:
             return wallet
         else:
-            return None
+            return False
 
     
     def find_by_id(self):
@@ -49,13 +49,13 @@ class Wallet(Base):
             return wallet
         except Exception as e:
             print(e)
-            return None
+            return False
 
         
 
    
     def remove(self):
-        drop_instance = self.find_by_id(self.id)
+        drop_instance = self.find_by_id()
         if drop_instance:
             try:
                 db.session.delete(drop_instance)
