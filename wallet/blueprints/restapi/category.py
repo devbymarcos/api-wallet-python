@@ -61,7 +61,8 @@ class CategoriesResource(Resource):
             data=data_result,
             message="Não encontramos dados",
             request="categories"))
-     def post(self):
+    
+    def post(self):
         if request.is_json:
             data = request.get_json()
             category = Category(
