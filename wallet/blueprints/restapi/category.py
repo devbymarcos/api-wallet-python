@@ -66,20 +66,19 @@ class CategoryCreate(Resource):
     def post(self):
         if request.is_json:
             data = request.get_json()
-
-            category = Category.save(
+            category = Category(
                 user_id=data['user_id'],
                 name=data['name'],
                 description=data['description'],
                 type=data['type'])
-
-            if category != False:
+            create = category.save()
+            if create:
                 data_result = {
-                    'id': category.id,
-                    'user_id': category.user_id,
-                    'name': category.name,
-                    'description': category.description,
-                    "type": category.type
+                    'id': create.id,
+                    'user_id': create.user_id,
+                    'name': create.name,
+                    'description': create.description,
+                    "type": create.type
 
                 }
 
