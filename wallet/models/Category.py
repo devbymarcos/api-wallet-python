@@ -64,7 +64,7 @@ class Category(Base):
             return False
 
     def update(self):
-        category = self.find_by_id(self.id)
+        category = self.find_by_id()
         if category:
             try:
                 category.name = self.name
@@ -81,7 +81,7 @@ class Category(Base):
 
     
     def remove(self):
-        category_remove = self.find_by_id(self.id)
+        category_remove = self.find_by_id()
         try:
             db.session.delete(category_remove)
             db.session.commit()

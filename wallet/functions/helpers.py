@@ -1,7 +1,8 @@
 
-def dic_return_api(data,message="",request=""):
+def api_format_return(data=[],message="",request="",data_items=True) :
     return {
     "data":data ,
     "message": message,
-    "request": request
+    "request": request,
+    "data_items":data_items
     }

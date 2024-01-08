@@ -2,7 +2,7 @@ from flask import abort, jsonify, request
 from flask_restful import Resource
 from wallet.models.Wallet import Wallet
 from wallet.blueprints.restapi.verify_auth import auth
-from wallet.functions.helpers import dic_return_api
+from wallet.functions.helpers import api_format_return
 
 class WalletResource(Resource):
 
@@ -18,16 +18,16 @@ class WalletResource(Resource):
                 'description': data.description,
                 'option_wallet': data.option_wallet
             }
-            return jsonify(dic_return_api(data_result,request="wallet"))
+            return jsonify(api_format_return(data_result,request="wallet"))
 
-        return jsonify(dic_return_api(False,message="Não encontramos resultados",request="wallet"))
+        return jsonify(api_format_return(False,message="Não encontramos resultados",request="wallet"))
 
     def delete(self, id):
         wallet = Wallet(id=id)
         data = wallet.remove()
         if not data:
-            return jsonify(dic_return_api(False,message="Não foi possivel fazer exclusão",request="wallet"))
-        return jsonify(dic_return_api(True,message="exclusao realizda",request="wallet"))
+            return jsonify(api_format_return(False,message="Não foi possivel fazer exclusão",request="wallet"))
+        return jsonify(api_format_return(True,message="exclusao realizda",request="wallet"))
 
 class WalletJsonResource(Resource):
     def post(self):
@@ -49,11 +49,11 @@ class WalletJsonResource(Resource):
                     'option_wallet': wallet.option_wallet
                 }
 
-                return jsonify(dic_return_api(data_result,request="wallet"))
+                return jsonify(api_format_return(data_result,request="wallet"))
             else:
-                return jsonify(dic_return_api(None,message="Algo deu erra contate o admin",request="wallet"))
+                return jsonify(api_format_return(None,message="Algo deu erra contate o admin",request="wallet"))
+            
     #TODO RESOURCE PARA REALIZAR UPDATE
-
     def put(self):
         if request.is_json:
             data_json = request.get_json()
@@ -74,9 +74,9 @@ class WalletJsonResource(Resource):
                     'option_wallet': wallet.option_wallet
                 }
 
-                return jsonify(dic_return_api(data_result,request="wallet"))
+                return jsonify(api_format_return(data_result,request="wallet"))
             else:
-                return jsonify(dic_return_api(None,message="Algo deu erra contate o admin",request="wallet"))
+                return jsonify(api_format_return(None,message="Algo deu erra contate o admin",request="wallet"))
 
 class WalletsResource(Resource):
     def get(self):
