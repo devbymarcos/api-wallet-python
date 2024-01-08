@@ -1,10 +1,10 @@
-from flask import abort, jsonify, request
+from flask import jsonify, request
 from flask_restful import Resource
 from wallet.ext.database import db
 from wallet.models.Category import Category
 from wallet.functions.helpers import api_format_return
 
-class CategoryResource(Resource):
+class CategoryIdResource(Resource):
     def get(self, id):
         category = Category(id=id)
         category_result = category.find_by_id()
@@ -41,6 +41,7 @@ class CategoryResource(Resource):
 
 
 class CategoriesResource(Resource):
+    #TODO PASSAR ID DO USER
     def get(self):
         category = Category(user_id=1)
         data = category.find_all()
@@ -60,10 +61,7 @@ class CategoriesResource(Resource):
             data=data_result,
             message="Não encontramos dados",
             request="categories"))
-
-
-class CategoryCreate(Resource):
-    def post(self):
+     def post(self):
         if request.is_json:
             data = request.get_json()
             category = Category(
@@ -118,3 +116,5 @@ class CategoryCreate(Resource):
         else:
             return jsonify(api_format_return(message="Não foi possivel atualizar contate o admin", request="/category", data_items=False))
         
+
+   
